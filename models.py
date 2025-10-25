@@ -114,8 +114,8 @@ class LLM(Base):
 
     File_text = Column(MEDIUMTEXT, nullable=True)
     LLM_analysis = Column(Text, nullable=True)
-    Code = Column(Text, nullable=True)
-    Log = Column(Text, nullable=True)
+    Code = Column(MEDIUMTEXT, nullable=True)
+    Log = Column(MEDIUMTEXT, nullable=True)
 
     __table_args__ = (
         ForeignKeyConstraint(
