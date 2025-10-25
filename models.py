@@ -11,11 +11,12 @@ from sqlalchemy import (
     Enum,
     Text,
     ForeignKeyConstraint,
-    PrimaryKeyConstraint
+    PrimaryKeyConstraint,
+    LargeBinary
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.mysql import MEDIUMTEXT
+from sqlalchemy.dialects.mysql import MEDIUMTEXT, LONGBLOB
 from database import Base
 
 
@@ -116,6 +117,12 @@ class LLM(Base):
     LLM_analysis = Column(Text, nullable=True)
     Code = Column(Text, nullable=True)
     Log = Column(Text, nullable=True)
+
+    # 파일 저장용 필드 추가
+    Asm_file = Column(LONGBLOB, nullable=True)
+    Bin_file = Column(LONGBLOB, nullable=True)
+    Asm_filename = Column(String(255), nullable=True)
+    Bin_filename = Column(String(255), nullable=True)
 
     __table_args__ = (
         ForeignKeyConstraint(

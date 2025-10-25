@@ -123,6 +123,16 @@ class LLMLogCreate(BaseModel):
     Log: str
 
 
+# ----------------------
+# 파일 업로드용 스키마 추가
+# ----------------------
+class LLMFileUpload(BaseModel):
+    File_id: int
+    Scan_id: int
+    Asm_filename: Optional[str] = None
+    Bin_filename: Optional[str] = None
+
+
 class LLMAssemblyGet(BaseModel):
     File_text: str
 
