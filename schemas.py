@@ -131,21 +131,21 @@ class LLMFileUpload(BaseModel):
 
 
 class LLMAssemblyGet(BaseModel):
-    File_text: str
+    File_text: Optional[str] = None
 
     class Config:
         orm_mode = True
         exclude_none = True
 
 class LLMCodeGet(BaseModel):
-    Code: str
+    Code: Optional[str] = None
 
     class Config:
         orm_mode = True
         exclude_none = True
 
 class LLMLogGet(BaseModel):
-    Log: str
+    Log: Optional[str] = None
 
     class Config:
         orm_mode = True
