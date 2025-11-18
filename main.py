@@ -135,7 +135,7 @@ def create_llm_log(log: schemas.LLMLogCreate, db: Session = Depends(get_db)):
     return db_log
 
 # 9. LLM 어셈블리어 파일 가져오기
-@app.get("files/{file_id}/llm/", response_model=List[schemas.LLMAssemblyGet])
+@app.get("/files/{file_id}/llm/", response_model=List[schemas.LLMAssemblyGet])
 def get_llm_assembly(file_id: int, scan_id: int, db: Session = Depends(get_db)):
     llm_assembly = db.query(models.LLM).filter_by(File_id=file_id, Scan_id=scan_id).all()
     if not llm_assembly:
@@ -143,7 +143,7 @@ def get_llm_assembly(file_id: int, scan_id: int, db: Session = Depends(get_db)):
     return llm_assembly
 
 # 10. LLM 코드 가져오기
-@app.get("files/{file_id}/llm_code/", response_model=List[schemas.LLMCodeGet])
+@app.get("/files/{file_id}/llm_code/", response_model=List[schemas.LLMCodeGet])
 def get_llm_code(file_id: int, scan_id: int, db: Session = Depends(get_db)):
     llm_code = db.query(models.LLM).filter_by(File_id=file_id, Scan_id=scan_id).all()
     if not llm_code:
@@ -151,7 +151,7 @@ def get_llm_code(file_id: int, scan_id: int, db: Session = Depends(get_db)):
     return llm_code
 
 # 11. LLM 로그 가져오기
-@app.get("files/{file_id}/llm_log/", response_model=List[schemas.LLMLogGet])
+@app.get("/files/{file_id}/llm_log/", response_model=List[schemas.LLMLogGet])
 def get_llm_log(file_id: int, scan_id: int, db: Session = Depends(get_db)):
     llm_log = db.query(models.LLM).filter_by(File_id=file_id, Scan_id=scan_id).all()
     if not llm_log:

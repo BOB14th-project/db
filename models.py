@@ -11,7 +11,8 @@ from sqlalchemy import (
     Enum,
     Text,
     ForeignKeyConstraint,
-    PrimaryKeyConstraint
+    PrimaryKeyConstraint,
+    LargeBinary,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -116,6 +117,11 @@ class LLM(Base):
     LLM_analysis = Column(Text, nullable=True)
     Code = Column(MEDIUMTEXT, nullable=True)
     Log = Column(MEDIUMTEXT, nullable=True)
+
+    Asm_file = Column(LargeBinary, nullable=True)
+    Asm_filename = Column(String(255), nullable=True)
+    Bin_file = Column(LargeBinary, nullable=True)
+    Bin_filename = Column(String(255), nullable=True)
 
     __table_args__ = (
         ForeignKeyConstraint(
