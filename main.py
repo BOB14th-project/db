@@ -268,81 +268,81 @@ def get_scan_statistics_by_scan_id(scan_id: int, db: Session = Depends(get_db)):
         top_10_algorithms=top_10_algorithms
     )
     
-# 16. ASM/BIN 파일 업로드
-@app.post("/files/{file_id}/upload_files/")
-async def upload_asm_bin_files(
-    file_id: int,
-    scan_id: int,
-    asm_file: bytes = None,
-    bin_file: bytes = None,
-    asm_filename: str = None,
-    bin_filename: str = None,
-    db: Session = Depends(get_db)
-):
-    # FileScan 존재 확인
-    file_scan_link = db.query(models.FileScan).filter_by(
-        File_id=file_id, Scan_id=scan_id
-    ).first()
-    if not file_scan_link:
-        raise HTTPException(status_code=404, detail="FileScan link not found. Create it first.")
+# # 16. ASM/BIN 파일 업로드
+# @app.post("/files/{file_id}/upload_files/")
+# async def upload_asm_bin_files(
+#     file_id: int,
+#     scan_id: int,
+#     asm_file: bytes = None,
+#     bin_file: bytes = None,
+#     asm_filename: str = None,
+#     bin_filename: str = None,
+#     db: Session = Depends(get_db)
+# ):
+#     # FileScan 존재 확인
+#     file_scan_link = db.query(models.FileScan).filter_by(
+#         File_id=file_id, Scan_id=scan_id
+#     ).first()
+#     if not file_scan_link:
+#         raise HTTPException(status_code=404, detail="FileScan link not found. Create it first.")
 
-    # LLM 레코드 생성 또는 업데이트
-    llm_record = db.query(models.LLM).filter_by(
-        File_id=file_id, Scan_id=scan_id
-    ).first()
+#     # LLM 레코드 생성 또는 업데이트
+#     llm_record = db.query(models.LLM).filter_by(
+#         File_id=file_id, Scan_id=scan_id
+#     ).first()
 
-    if not llm_record:
-        llm_record = models.LLM(File_id=file_id, Scan_id=scan_id)
-        db.add(llm_record)
+#     if not llm_record:
+#         llm_record = models.LLM(File_id=file_id, Scan_id=scan_id)
+#         db.add(llm_record)
 
-    # 파일 저장
-    if asm_file:
-        llm_record.Asm_file = asm_file
-        llm_record.Asm_filename = asm_filename
-    if bin_file:
-        llm_record.Bin_file = bin_file
-        llm_record.Bin_filename = bin_filename
+#     # 파일 저장
+#     if asm_file:
+#         llm_record.Asm_file = asm_file
+#         llm_record.Asm_filename = asm_filename
+#     if bin_file:
+#         llm_record.Bin_file = bin_file
+#         llm_record.Bin_filename = bin_filename
 
-    db.commit()
-    db.refresh(llm_record)
+#     db.commit()
+#     db.refresh(llm_record)
 
-    return {
-        "Analysis_id": llm_record.Analysis_id,
-        "Asm_filename": llm_record.Asm_filename,
-        "Bin_filename": llm_record.Bin_filename,
-        "success": True
-    }
+#     return {
+#         "Analysis_id": llm_record.Analysis_id,
+#         "Asm_filename": llm_record.Asm_filename,
+#         "Bin_filename": llm_record.Bin_filename,
+#         "success": True
+#     }
 
-# 17. ASM 파일 다운로드
-@app.get("/files/{file_id}/download_asm/")
-async def download_asm_file(file_id: int, scan_id: int, db: Session = Depends(get_db)):
-    llm_record = db.query(models.LLM).filter_by(
-        File_id=file_id, Scan_id=scan_id, Asm_file__isnot=None
-    ).first()
+# # 17. ASM 파일 다운로드
+# @app.get("/files/{file_id}/download_asm/")
+# async def download_asm_file(file_id: int, scan_id: int, db: Session = Depends(get_db)):
+#     llm_record = db.query(models.LLM).filter_by(
+#         File_id=file_id, Scan_id=scan_id, Asm_file__isnot=None
+#     ).first()
     
-    if not llm_record or not llm_record.Asm_file:
-        raise HTTPException(status_code=404, detail="ASM file not found")
+#     if not llm_record or not llm_record.Asm_file:
+#         raise HTTPException(status_code=404, detail="ASM file not found")
     
-    from fastapi.responses import Response
-    return Response(
-        content=llm_record.Asm_file,
-        media_type="application/octet-stream",
-        headers={"Content-Disposition": f"attachment; filename={llm_record.Asm_filename}"}
-    )
+#     from fastapi.responses import Response
+#     return Response(
+#         content=llm_record.Asm_file,
+#         media_type="application/octet-stream",
+#         headers={"Content-Disposition": f"attachment; filename={llm_record.Asm_filename}"}
+#     )
 
-# 18. BIN 파일 다운로드
-@app.get("/files/{file_id}/download_bin/")
-async def download_bin_file(file_id: int, scan_id: int, db: Session = Depends(get_db)):
-    llm_record = db.query(models.LLM).filter_by(
-        File_id=file_id, Scan_id=scan_id, Bin_file__isnot=None
-    ).first()
+# # 18. BIN 파일 다운로드
+# @app.get("/files/{file_id}/download_bin/")
+# async def download_bin_file(file_id: int, scan_id: int, db: Session = Depends(get_db)):
+#     llm_record = db.query(models.LLM).filter_by(
+#         File_id=file_id, Scan_id=scan_id, Bin_file__isnot=None
+#     ).first()
     
-    if not llm_record or not llm_record.Bin_file:
-        raise HTTPException(status_code=404, detail="BIN file not found")
+#     if not llm_record or not llm_record.Bin_file:
+#         raise HTTPException(status_code=404, detail="BIN file not found")
     
-    from fastapi.responses import Response
-    return Response(
-        content=llm_record.Bin_file,
-        media_type="application/octet-stream",
-        headers={"Content-Disposition": f"attachment; filename={llm_record.Bin_filename}"}
-    )
+#     from fastapi.responses import Response
+#     return Response(
+#         content=llm_record.Bin_file,
+#         media_type="application/octet-stream",
+#         headers={"Content-Disposition": f"attachment; filename={llm_record.Bin_filename}"}
+#     )
