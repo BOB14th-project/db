@@ -73,7 +73,7 @@ def create_dynamic_analysis(analysis: schemas.DynamicAnalysisCreate, db: Session
 
 # 5. LLM로 보낼 어셈블리 파일 저장
 @app.post("/files/{file_id}/llm/", response_model=schemas.LLMAssemblyResult)
-def create_llm_result(result: schemas.LLMAssemblyCreate, db: Session = Depends(get_db)):
+def create_llm_assembly(result: schemas.LLMAssemblyCreate, db: Session = Depends(get_db)):
     file_scan_link = db.query(models.FileScan).filter_by(
         File_id=result.File_id, Scan_id=result.Scan_id
     ).first()
@@ -103,6 +103,13 @@ def create_llm_analysis(analysis: schemas.LLMResult, db: Session = Depends(get_d
     db.commit()
     db.refresh(db_analysis)
     return db_analysis
+
+@app.get("/files/{file_id}/llm_analysis/", response_model=List[schemas.LLMResult])
+def get_llm_analysis(file_id: int, scan_id: int, db: Session = Depends(get_db)):
+    llm_results = db.query(models.LLM).filter_by(File_id=file_id, Scan_id=scan_id).all()
+    if not llm_results:
+        raise HTTPException(status_code=404, detail="LLM Analysis not found")
+    return llm_results
 
 #7. LLM 코드 저장
 @app.post("/files/{file_id}/llm_code/", response_model=schemas.LLMCodeCreate)

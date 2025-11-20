@@ -107,7 +107,7 @@ class LLMAssemblyResult(BaseModel):
 class LLMResult(BaseModel):
     File_id: int
     Scan_id: int
-    LLM_analysis: str
+    LLM_analysis: Optional[str] = None
 
     class Config:
         orm_mode = True
